@@ -13,9 +13,14 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static wtg_jack.Main.FPS;
+import static wtg_jack.Main.TILE_SIZE;
 import static wtg_jack.Main.camera;
 import wtg_jack.map.Map;
+import wtg_jack.perso.Boby;
 import wtg_jack.perso.Jack;
+import wtg_jack.perso.PNJ;
+import wtg_jack.perso.Perso;
 
 /**
  * Exploration.java
@@ -23,13 +28,12 @@ import wtg_jack.perso.Jack;
  */
 public class Exploration implements Screen, InputProcessor {
 
-	protected static final int FPS = 30;
-
 	private Batch batch;
 
 	private Map map;
 
 	private Jack jack;
+	private Perso[] persos;
 
 	public Exploration() {
 
@@ -39,7 +43,14 @@ public class Exploration implements Screen, InputProcessor {
 		batch = map.getBatch();
 
 		jack = new Jack();
-		jack.setPosition(16, 16);
+		jack.setPosition(TILE_SIZE, TILE_SIZE);
+
+		persos = new Perso[]{
+			jack,
+			new Boby()
+		};
+
+		persos[1].setPosition(TILE_SIZE * 3, TILE_SIZE * 2);
 
 	}
 
@@ -51,13 +62,15 @@ public class Exploration implements Screen, InputProcessor {
 	@Override
 	public void render(float delta) {
 		update();
-		temporize();
+//		temporize();
 		renderer();
 	}
 
 	private void update() {
 		//update
-		jack.update();
+		for (Perso perso : persos) {
+			perso.update();
+		}
 
 		camera.position.set(jack.getX(), jack.getY(), 0);
 		camera.update();
@@ -79,7 +92,9 @@ public class Exploration implements Screen, InputProcessor {
 		//render
 		map.render();
 		batch.begin();
-		jack.draw(batch);
+		for (Perso perso : persos) {
+			perso.draw(batch);
+		}
 		batch.end();
 	}
 

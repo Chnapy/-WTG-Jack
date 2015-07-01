@@ -1,12 +1,12 @@
 package wtg_jack;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class Main extends Game {
 
+	public static final int FPS = 30;
+	public static final int TILE_SIZE = 16;
 	public static int RATIO_SIZE = 3;
 	private static int oldWidth = -1;
 	private static int oldHeight = -1;

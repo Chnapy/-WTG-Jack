@@ -6,11 +6,11 @@
 package wtg_jack.perso;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import static wtg_jack.Main.TILE_SIZE;
 import static wtg_jack.perso.Perso.Direction.BOTTOM;
 import static wtg_jack.perso.Perso.Direction.LEFT;
 import static wtg_jack.perso.Perso.Direction.RIGHT;
@@ -51,7 +51,7 @@ public abstract class Perso extends Sprite {
 		walkBottom = new Animation(FRAME_DURATION, walksBottom);
 		walkLeft = new Animation(FRAME_DURATION, walksLeft);
 		walkRight = new Animation(FRAME_DURATION, walksRight);
-		setSize(16, 16);
+		setSize(TILE_SIZE, TILE_SIZE);
 		
 		stateTime = 0;
 		animActu = null;
@@ -76,7 +76,7 @@ public abstract class Perso extends Sprite {
 					setY(getY() - 1);
 					break;
 			}
-			if (getX() % 16 == 0 && getY() % 16 == 0) {
+			if (getX() % TILE_SIZE == 0 && getY() % TILE_SIZE == 0) {
 				etat = STAY;
 			}
 		}
