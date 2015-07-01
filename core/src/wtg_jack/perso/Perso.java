@@ -6,6 +6,7 @@
 package wtg_jack.perso;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -22,66 +23,100 @@ import static wtg_jack.perso.Perso.Etat.WALK;
  *
  */
 public abstract class Perso extends Sprite {
-
-	private static final float FRAME_DURATION = 0.15f;
-
+	
+	private static final float FRAME_DURATION = 0.12f;
+	
 	protected final Animation walkTop;
 	protected final Animation walkBottom;
 	protected final Animation walkLeft;
 	protected final Animation walkRight;
-
+	
 	enum Etat {
-
+		
 		STAY, WALK
 	}
-
+	
 	enum Direction {
-
+		
 		TOP, BOTTOM, LEFT, RIGHT
 	}
-
+	
 	private float stateTime;
 	private Animation animActu;
-	private Etat etat;
-	private Direction direction;
-
+	protected Etat etat;
+	protected Direction direction;
+	
 	public Perso(TextureRegion[] walksTop, TextureRegion[] walksBottom, TextureRegion[] walksLeft, TextureRegion[] walksRight) {
 		walkTop = new Animation(FRAME_DURATION, walksTop);
 		walkBottom = new Animation(FRAME_DURATION, walksBottom);
 		walkLeft = new Animation(FRAME_DURATION, walksLeft);
 		walkRight = new Animation(FRAME_DURATION, walksRight);
-
+		setSize(16, 16);
+		
+		stateTime = 0;
+		animActu = null;
 		etat = STAY;
 		direction = null;
-		changeAnimation(BOTTOM);
+		changeDirection(BOTTOM);
 	}
-
-	public void changeAnimation(Direction _direction) {
-		if (direction != _direction) {
-			stateTime = 0;
-			switch (_direction) {
-				case TOP:
-					animActu = walkTop;
-					break;
-				case BOTTOM:
-					animActu = walkBottom;
-					break;
+	
+	public void update() {
+		if (etat != STAY) {
+			switch (direction) {
 				case LEFT:
-					animActu = walkLeft;
+					setX(getX() - 1);
 					break;
 				case RIGHT:
-					animActu = walkRight;
+					setX(getX() + 1);
 					break;
+				case TOP:
+					setY(getY() + 1);
+					break;
+				case BOTTOM:
+					setY(getY() - 1);
+					break;
+			}
+			if (getX() % 16 == 0 && getY() % 16 == 0) {
+				etat = STAY;
 			}
 		}
 	}
-
+	
+	public void changeDirection(Direction _direction) {
+		direction = _direction;
+		switch (_direction) {
+			case TOP:
+				if (!walkTop.equals(animActu)) {
+					animActu = walkTop;
+				}
+				break;
+			case BOTTOM:
+				if (!walkBottom.equals(animActu)) {
+					animActu = walkBottom;
+				}
+				break;
+			case LEFT:
+				if (!walkLeft.equals(animActu)) {
+					animActu = walkLeft;
+				}
+				break;
+			case RIGHT:
+				if (!walkRight.equals(animActu)) {
+					animActu = walkRight;
+				}
+				break;
+		}
+	}
+	
+	public void move(Direction _direction) {
+		changeDirection(_direction);
+		etat = WALK;
+	}
+	
 	@Override
 	public void draw(Batch batch) {
-		if (etat != STAY) {
-			stateTime += Gdx.graphics.getDeltaTime();
-		}
-		batch.draw(animActu.getKeyFrame(stateTime, true), getX(), getY());
+		stateTime += Gdx.graphics.getDeltaTime();
+		batch.draw(animActu.getKeyFrame(etat == STAY ? 0 : stateTime, true), getX(), getY());
 	}
-
+	
 }
