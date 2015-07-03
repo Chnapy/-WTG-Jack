@@ -146,6 +146,14 @@ public abstract class Perso extends Sprite implements Actionable {
 		MAP.setBusy(toTile(x), toTile(y), this);
 	}
 
+	public void setEtat(Etat etat) {
+		this.etat = etat;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+
 	@Override
 	public void draw(Batch batch) {
 		stateTime += Gdx.graphics.getDeltaTime();

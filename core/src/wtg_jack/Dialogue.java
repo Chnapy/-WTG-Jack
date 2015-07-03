@@ -35,6 +35,8 @@ public class Dialogue extends Sprite {
 		atlas.findRegion("dialog", 8),
 		atlas.findRegion("dialog", 9)
 	};
+	private static final float FRAME_DURATION = 0.5f;
+	private static final float CHAR_DURATION = 0.05f;
 	private static final BitmapFont font;
 
 	static {
@@ -47,9 +49,8 @@ public class Dialogue extends Sprite {
 
 	private boolean show;
 	private String[] text;
-	private String text1;
-	private String text2;
 	private int index;
+	private float stateTime;
 
 	public Dialogue() {
 		show = false;
@@ -58,17 +59,29 @@ public class Dialogue extends Sprite {
 	public void show(String texte) {
 		show = true;
 		text = texte.split("\n");
-		text1 = text.length > 0 ? text[0] : "";
-		text2 = text.length > 1 ? text[1] : "";
 		index = Math.min(text.length - 1, 1);
+		stateTime = 0;
+	}
+
+	public void next() {
+		if (index < text.length - 1) {
+			index += 2;
+			stateTime = 0;
+		} else {
+			show = false;
+		}
+	}
+
+	public boolean isShow() {
+		return show;
 	}
 
 	@Override
 	public void draw(Batch batch) {
-		if(!show) {
+		if (!show) {
 			return;
 		}
-		
+
 		batch.draw(ELEMENTS[1], 0, TILE_SIZE * 3 - 8);
 		batch.draw(ELEMENTS[2], TILE_SIZE * 10 - 8, TILE_SIZE * 3 - 8);
 		batch.draw(ELEMENTS[3], TILE_SIZE * 10 - 8, 0);
@@ -78,11 +91,16 @@ public class Dialogue extends Sprite {
 		batch.draw(ELEMENTS[6], 0, 8, 8, TILE_SIZE * 3 - 8 * 2);
 		batch.draw(ELEMENTS[6], TILE_SIZE * 10 - 8, 8, 8, TILE_SIZE * 3 - 8 * 2);
 		batch.draw(ELEMENTS[0], 8, 8, TILE_SIZE * 10 - 8 * 2, TILE_SIZE * 3 - 8 * 2);
+		stateTime += Gdx.graphics.getDeltaTime();
 		
-		font.draw(batch, text1, TILE_SIZE / 2, TILE_SIZE * 2);
-		font.draw(batch, text2, TILE_SIZE / 2, TILE_SIZE);
-		
-		if(index < text.length) {
+		int length1 = Math.min(text[index - 1].length(), (int) (stateTime / CHAR_DURATION));
+		font.draw(batch, text[index - 1].substring(0, length1), TILE_SIZE / 2, TILE_SIZE * 2);
+		if (index < text.length) {
+			int length2 = Math.min(text[index].length(), (int) (stateTime / CHAR_DURATION) - length1);
+			font.draw(batch, text[index].substring(0, length2), TILE_SIZE / 2, TILE_SIZE);
+		}
+
+		if (index < text.length - 1 && (int) (stateTime / FRAME_DURATION) % 2 == 0) {
 			batch.draw(ELEMENTS[7], TILE_SIZE * 9, TILE_SIZE / 2);
 		}
 	}

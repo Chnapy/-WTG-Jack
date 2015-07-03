@@ -10,9 +10,11 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import wtg_jack.Actionable;
+import static wtg_jack.Exploration.DIALOGUE;
 import static wtg_jack.Exploration.MAP;
 import static wtg_jack.Exploration.toTile;
 import static wtg_jack.Main.TILE_SIZE;
+import wtg_jack.perso.Enum;
 import static wtg_jack.perso.Enum.Direction.BOTTOM;
 import static wtg_jack.perso.Enum.Direction.LEFT;
 import static wtg_jack.perso.Enum.Direction.RIGHT;
@@ -88,26 +90,30 @@ public class Jack extends Perso {
 	}
 
 	public void a() {
-		int x = toTile(getX());
-		int y = toTile(getY());
-		switch (direction) {
-			case LEFT:
-				x--;
-				break;
-			case RIGHT:
-				x++;
-				break;
-			case TOP:
-				y++;
-				break;
-			case BOTTOM:
-				y--;
-				break;
-		}
-		Actionable perso = MAP.isBusy(x, y);
-		if(perso != null) {
-			PNJ pnj = (PNJ) perso;
-			pnj.interaction(this);
+		if (DIALOGUE.isShow()) {
+			DIALOGUE.next();
+		} else {
+			int x = toTile(getX());
+			int y = toTile(getY());
+			switch (direction) {
+				case LEFT:
+					x--;
+					break;
+				case RIGHT:
+					x++;
+					break;
+				case TOP:
+					y++;
+					break;
+				case BOTTOM:
+					y--;
+					break;
+			}
+			Actionable perso = MAP.isBusy(x, y);
+			if (perso != null) {
+				PNJ pnj = (PNJ) perso;
+				pnj.interaction(this);
+			}
 		}
 	}
 
@@ -116,19 +122,27 @@ public class Jack extends Perso {
 	}
 
 	public void left() {
-		move(LEFT);
+		if (!DIALOGUE.isShow()) {
+			move(LEFT);
+		}
 	}
 
 	public void right() {
-		move(RIGHT);
+		if (!DIALOGUE.isShow()) {
+			move(RIGHT);
+		}
 	}
 
 	public void up() {
-		move(TOP);
+		if (!DIALOGUE.isShow()) {
+			move(TOP);
+		}
 	}
 
 	public void down() {
-		move(BOTTOM);
+		if (!DIALOGUE.isShow()) {
+			move(BOTTOM);
+		}
 	}
 
 	public void start() {

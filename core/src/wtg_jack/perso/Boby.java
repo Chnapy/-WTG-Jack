@@ -53,7 +53,7 @@ public class Boby extends Dresseur {
 							new Point(0, -1),
 							new Point(0, 0)
 						}, INTERVAL),
-				"C'est moi Boby le génie !", "Tu m'as vaincu comment t'es fort !"
+				"C'est moi\nBoby le génie !", "Tu m'as vaincu comment t'es fort !"
 		);
 	}
 

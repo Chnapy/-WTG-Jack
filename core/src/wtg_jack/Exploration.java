@@ -56,7 +56,6 @@ public class Exploration implements Screen, InputProcessor {
 		);
 
 		persos.get(1).setPosition(TILE_SIZE * 3, TILE_SIZE * 2);
-		DIALOGUE.show("Bienvenue jeune\nDresseur! Es-tu\nprêt à vivre la\ngrande aventure?");
 	}
 
 	@Override

@@ -7,6 +7,7 @@ package wtg_jack.perso.pnj;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.awt.Point;
+import static wtg_jack.Exploration.DIALOGUE;
 import static wtg_jack.Exploration.toTile;
 import wtg_jack.perso.Perso;
 import wtg_jack.perso.Enum.Direction;
@@ -20,7 +21,7 @@ public abstract class PNJ extends Perso {
 
 	private Point firstPosition;
 	protected final IAmove iamove;
-	
+
 	private String intro;
 
 	public PNJ(TextureRegion[] walksTop, TextureRegion[] walksBottom, TextureRegion[] walksLeft, TextureRegion[] walksRight,
@@ -32,7 +33,9 @@ public abstract class PNJ extends Perso {
 
 	@Override
 	public void update() {
-		autoMove();
+		if (!DIALOGUE.isShow()) {
+			autoMove();
+		}
 		super.update();
 	}
 
@@ -48,13 +51,13 @@ public abstract class PNJ extends Perso {
 
 	public void autoMove() {
 		Direction d = iamove.IAmove(this);
-		if(d != null) {
+		if (d != null) {
 			move(d);
 		}
 	}
 
 	@Override
 	public void interaction(Jack jack) {
-		System.out.println("OK");
+		DIALOGUE.show(this.intro);
 	}
 }
