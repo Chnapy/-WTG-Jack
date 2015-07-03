@@ -10,6 +10,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +21,6 @@ import static wtg_jack.Main.camera;
 import wtg_jack.map.Map;
 import wtg_jack.perso.Boby;
 import wtg_jack.perso.Jack;
-import wtg_jack.perso.PNJ;
 import wtg_jack.perso.Perso;
 
 /**
@@ -29,29 +30,33 @@ import wtg_jack.perso.Perso;
 public class Exploration implements Screen, InputProcessor {
 
 	private Batch batch;
+	private Batch dialogBatch;
 
-	private Map map;
+	public static final Map MAP = new Map();
+	public static final Dialogue DIALOGUE = new Dialogue();
 
 	private Jack jack;
-	private Perso[] persos;
+	private Array<Perso> persos;
 
 	public Exploration() {
 
-		map = new Map();
-		map.setView(camera);
+		MAP.setView(camera);
 
-		batch = map.getBatch();
+		batch = MAP.getBatch();
+		dialogBatch = new SpriteBatch();
+		dialogBatch.setProjectionMatrix(camera.combined);
 
 		jack = new Jack();
 		jack.setPosition(TILE_SIZE, TILE_SIZE);
 
-		persos = new Perso[]{
-			jack,
-			new Boby()
-		};
+		persos = new Array<>();
+		persos.addAll(
+				jack,
+				new Boby()
+		);
 
-		persos[1].setPosition(TILE_SIZE * 3, TILE_SIZE * 2);
-
+		persos.get(1).setPosition(TILE_SIZE * 3, TILE_SIZE * 2);
+		DIALOGUE.show("Bienvenue jeune dresseur ! Es-tu prêt à vivre la grande avanture ?");
 	}
 
 	@Override
@@ -74,7 +79,7 @@ public class Exploration implements Screen, InputProcessor {
 
 		camera.position.set(jack.getX(), jack.getY(), 0);
 		camera.update();
-		batch.setProjectionMatrix(camera.combined);
+		MAP.setView(camera);
 	}
 
 	private void temporize() {
@@ -90,12 +95,19 @@ public class Exploration implements Screen, InputProcessor {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		//render
-		map.render();
+		MAP.render();
 		batch.begin();
 		for (Perso perso : persos) {
 			perso.draw(batch);
 		}
 		batch.end();
+		dialogBatch.begin();
+		DIALOGUE.draw(dialogBatch);
+		dialogBatch.end();
+	}
+	
+	public static int toTile(float a) {
+		return (int) a/ TILE_SIZE;
 	}
 
 	@Override

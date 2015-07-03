@@ -1,0 +1,53 @@
+dialogue.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+dialog
+  rotate: false
+  xy: 2, 2
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 0
+dialog
+  rotate: false
+  xy: 12, 2
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 1
+dialog
+  rotate: false
+  xy: 22, 2
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 2
+dialog
+  rotate: false
+  xy: 2, 12
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 3
+dialog
+  rotate: false
+  xy: 12, 12
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 4
+dialog
+  rotate: false
+  xy: 22, 12
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 5
+dialog
+  rotate: false
+  xy: 2, 22
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 6

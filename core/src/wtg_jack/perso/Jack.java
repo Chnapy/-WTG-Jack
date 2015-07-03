@@ -9,12 +9,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import wtg_jack.Actionable;
+import static wtg_jack.Exploration.MAP;
+import static wtg_jack.Exploration.toTile;
 import static wtg_jack.Main.TILE_SIZE;
-import static wtg_jack.perso.Perso.Direction.BOTTOM;
-import static wtg_jack.perso.Perso.Direction.LEFT;
-import static wtg_jack.perso.Perso.Direction.RIGHT;
-import static wtg_jack.perso.Perso.Direction.TOP;
-import static wtg_jack.perso.Perso.Etat.STAY;
+import static wtg_jack.perso.Enum.Direction.BOTTOM;
+import static wtg_jack.perso.Enum.Direction.LEFT;
+import static wtg_jack.perso.Enum.Direction.RIGHT;
+import static wtg_jack.perso.Enum.Direction.TOP;
+import static wtg_jack.perso.Enum.Etat.STAY;
+import wtg_jack.perso.pnj.PNJ;
 
 /**
  * Jack.java
@@ -47,7 +51,7 @@ public class Jack extends Perso {
 	private int key;
 
 	public Jack() {
-		super(WALK_TOP, WALK_BOTTOM, WALK_LEFT, WALK_RIGHT);
+		super(WALK_TOP, WALK_BOTTOM, WALK_LEFT, WALK_RIGHT, "Jack");
 		key = -1;
 	}
 
@@ -84,7 +88,27 @@ public class Jack extends Perso {
 	}
 
 	public void a() {
-
+		int x = toTile(getX());
+		int y = toTile(getY());
+		switch (direction) {
+			case LEFT:
+				x--;
+				break;
+			case RIGHT:
+				x++;
+				break;
+			case TOP:
+				y++;
+				break;
+			case BOTTOM:
+				y--;
+				break;
+		}
+		Actionable perso = MAP.isBusy(x, y);
+		if(perso != null) {
+			PNJ pnj = (PNJ) perso;
+			pnj.interaction(this);
+		}
 	}
 
 	public void b() {
@@ -118,27 +142,23 @@ public class Jack extends Perso {
 	@Override
 	public void update() {
 		if (etat != STAY) {
-			int keypressed = -1;
 			switch (direction) {
 				case LEFT:
-					keypressed = Keys.LEFT;
 					setX(getX() - 1);
 					break;
 				case RIGHT:
-					keypressed = Keys.RIGHT;
 					setX(getX() + 1);
 					break;
 				case TOP:
-					keypressed = Keys.UP;
 					setY(getY() + 1);
 					break;
 				case BOTTOM:
-					keypressed = Keys.DOWN;
 					setY(getY() - 1);
 					break;
 			}
-//			System.out.println(getX() + " " + getY());
 			if (getX() % TILE_SIZE == 0 && getY() % TILE_SIZE == 0) {
+				MAP.removeBusy(oldPosition);
+				oldPosition.setLocation(toTile(getX()), toTile(getY()));
 				etat = STAY;
 				if (isMoveKeysPressed()) {
 					action();
@@ -169,6 +189,10 @@ public class Jack extends Perso {
 
 	public void setKey(int key) {
 		this.key = key;
+	}
+
+	@Override
+	public void interaction(Jack jack) {
 	}
 
 }

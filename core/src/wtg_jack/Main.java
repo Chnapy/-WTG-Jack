@@ -13,9 +13,6 @@ public class Main extends Game {
 	
 	public static final OrthographicCamera camera = new OrthographicCamera();
 	
-	static {
-	}
-	
 	private Exploration exploration;
 
 	@Override

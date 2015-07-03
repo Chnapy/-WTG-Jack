@@ -19,7 +19,7 @@ public class DesktopLauncher {
 		config.height = 128 * Main.RATIO_SIZE;
 		config.resizable = false;
 		config.fullscreen = false;
-		config.vSyncEnabled = true;
+//		config.vSyncEnabled = true;
 
 		return config;
 	}
