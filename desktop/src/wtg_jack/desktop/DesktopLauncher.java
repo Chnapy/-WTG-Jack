@@ -15,8 +15,8 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Les aventures de Jack à la recherche du mythe de la pomme de pain magique";
 		config.useGL30 = false;
-		config.width = 160 * Main.RATIO_SIZE;
-		config.height = 128 * Main.RATIO_SIZE;
+		config.width = Main.WIDTH * Main.RATIO_SIZE;
+		config.height = Main.HEIGHT * Main.RATIO_SIZE;
 		config.resizable = false;
 		config.fullscreen = false;
 //		config.vSyncEnabled = true;

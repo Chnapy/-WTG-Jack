@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class Main extends Game {
 
+	public static int WIDTH = 160;
+	public static int HEIGHT = 144;
+	public static int RATIO_SIZE = 3;
 	public static final int FPS = 30;
 	public static final int TILE_SIZE = 16;
-	public static int RATIO_SIZE = 3;
 	private static int oldWidth = -1;
 	private static int oldHeight = -1;
 	
@@ -17,7 +19,7 @@ public class Main extends Game {
 
 	@Override
 	public void create() {
-		camera.setToOrtho(false, 160, 128);
+		camera.setToOrtho(false, WIDTH, HEIGHT);
 		camera.update();
 		
 		exploration = new Exploration();
@@ -37,6 +39,6 @@ public class Main extends Game {
 		oldWidth = width;
 		oldHeight = height;
 		
-//		super.resize(160 * RATIO_SIZE, 128 * RATIO_SIZE);
+//		super.resize(WIDTH * RATIO_SIZE, HEIGHT * RATIO_SIZE);
 	}
 }
