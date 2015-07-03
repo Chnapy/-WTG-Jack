@@ -24,13 +24,16 @@ public class Dialogue extends Sprite {
 
 	private static final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dialogue/dialogue.txt"));
 	private static final TextureRegion[] ELEMENTS = new TextureRegion[]{
-		atlas.findRegion("dialog", 6),
 		atlas.findRegion("dialog", 0),
+		atlas.findRegion("dialog", 1),
 		atlas.findRegion("dialog", 2),
+		atlas.findRegion("dialog", 3),
 		atlas.findRegion("dialog", 4),
 		atlas.findRegion("dialog", 5),
-		atlas.findRegion("dialog", 1),
-		atlas.findRegion("dialog", 3)
+		atlas.findRegion("dialog", 6),
+		atlas.findRegion("dialog", 7),
+		atlas.findRegion("dialog", 8),
+		atlas.findRegion("dialog", 9)
 	};
 	private static final BitmapFont font;
 
@@ -78,6 +81,10 @@ public class Dialogue extends Sprite {
 		
 		font.draw(batch, text1, TILE_SIZE / 2, TILE_SIZE * 2);
 		font.draw(batch, text2, TILE_SIZE / 2, TILE_SIZE);
+		
+		if(index < text.length) {
+			batch.draw(ELEMENTS[7], TILE_SIZE * 9, TILE_SIZE / 2);
+		}
 	}
 
 }

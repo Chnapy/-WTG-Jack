@@ -1,6 +1,6 @@
 dialogue.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 dialog
   rotate: false
@@ -51,3 +51,24 @@ dialog
   orig: 8, 8
   offset: 0, 0
   index: 6
+dialog
+  rotate: false
+  xy: 12, 22
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 7
+dialog
+  rotate: false
+  xy: 22, 22
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 8
+dialog
+  rotate: false
+  xy: 2, 32
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 9
