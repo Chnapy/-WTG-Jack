@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import static wtg_jack.Main.TILE_SIZE;
+import static wtg_jack.Jeu.TILE_SIZE;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
  * Dialogue.java
  *
  */
-public class Dialogue extends Sprite {
+public abstract class Dialogue extends Sprite {
 
 	private static final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dialogue/dialogue.txt"));
 	private static final TextureRegion[] ELEMENTS = new TextureRegion[]{
@@ -56,7 +56,8 @@ public class Dialogue extends Sprite {
 		show = false;
 	}
 
-	public void show(String texte) {
+	public Dialogue(String texte) {
+		Exploration.pauseAll();
 		show = true;
 		text = texte.split("\n");
 		index = Math.min(text.length - 1, 1);
@@ -69,8 +70,11 @@ public class Dialogue extends Sprite {
 			stateTime = 0;
 		} else {
 			show = false;
+			end();
 		}
 	}
+	
+	public abstract void end();
 
 	public boolean isShow() {
 		return show;

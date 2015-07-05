@@ -30,7 +30,11 @@ public class Map extends OrthogonalTiledMapRenderer {
 	}
 
 	public boolean isFree(int x, int y) {
-		return layerCollision.getCell(x * 2, y * 2) == null && isBusy(x, y) == null;
+		return isCollision(x, y) && isBusy(x, y) == null;
+	}
+
+	public boolean isCollision(int x, int y) {
+		return layerCollision.getCell(x * 2, y * 2) == null;
 	}
 
 	public void setBusy(int x, int y, Actionable perso) {

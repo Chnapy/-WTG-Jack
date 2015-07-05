@@ -7,7 +7,9 @@ package wtg_jack.perso.pnj;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.awt.Point;
-import static wtg_jack.Exploration.DIALOGUE;
+import wtg_jack.Dialogue;
+import static wtg_jack.Exploration.getDialogue;
+import static wtg_jack.Exploration.setDialogue;
 import static wtg_jack.Exploration.toTile;
 import wtg_jack.perso.Perso;
 import wtg_jack.perso.Enum.Direction;
@@ -33,7 +35,7 @@ public abstract class PNJ extends Perso {
 
 	@Override
 	public void update() {
-		if (!DIALOGUE.isShow()) {
+		if (play && !getDialogue().isShow()) {
 			autoMove();
 		}
 		super.update();
@@ -58,6 +60,15 @@ public abstract class PNJ extends Perso {
 
 	@Override
 	public void interaction(Jack jack) {
-		DIALOGUE.show(this.intro);
+		setDialogue(new Dialogue(this.intro) {
+
+			@Override
+			public void end() {
+			}
+		});
+	}
+
+	public String getIntro() {
+		return intro;
 	}
 }

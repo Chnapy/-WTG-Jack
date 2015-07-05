@@ -7,7 +7,6 @@ package wtg_jack.perso.pnj;
 
 import java.awt.Point;
 import static wtg_jack.Exploration.toTile;
-import static wtg_jack.Main.TILE_SIZE;
 import wtg_jack.perso.Enum;
 import static wtg_jack.perso.Enum.Direction.BOTTOM;
 import static wtg_jack.perso.Enum.Direction.LEFT;

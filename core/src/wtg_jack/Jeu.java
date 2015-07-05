@@ -3,7 +3,7 @@ package wtg_jack;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-public class Main extends Game {
+public class Jeu extends Game {
 
 	public static int WIDTH = 160;
 	public static int HEIGHT = 144;

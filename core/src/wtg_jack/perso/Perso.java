@@ -6,6 +6,7 @@
 package wtg_jack.perso;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -14,7 +15,7 @@ import java.awt.Point;
 import wtg_jack.Actionable;
 import static wtg_jack.Exploration.MAP;
 import static wtg_jack.Exploration.toTile;
-import static wtg_jack.Main.TILE_SIZE;
+import static wtg_jack.Jeu.TILE_SIZE;
 import wtg_jack.perso.Enum.Direction;
 import static wtg_jack.perso.Enum.Direction.BOTTOM;
 import static wtg_jack.perso.Enum.Direction.LEFT;
@@ -43,9 +44,11 @@ public abstract class Perso extends Sprite implements Actionable {
 	protected Etat etat;
 	protected Direction direction;
 	protected Point oldPosition;
-	
+
 	//Dialogue
 	private final String nom;
+	
+	protected boolean play;
 
 	public Perso(TextureRegion[] walksTop, TextureRegion[] walksBottom, TextureRegion[] walksLeft, TextureRegion[] walksRight,
 			String _nom) {
@@ -61,6 +64,7 @@ public abstract class Perso extends Sprite implements Actionable {
 		etat = STAY;
 		direction = null;
 		changeDirection(BOTTOM);
+		play = true;
 	}
 
 	public void update() {
@@ -80,11 +84,15 @@ public abstract class Perso extends Sprite implements Actionable {
 					break;
 			}
 			if (getX() % TILE_SIZE == 0 && getY() % TILE_SIZE == 0) {
-				MAP.removeBusy(oldPosition);
-				oldPosition.setLocation(toTile(getX()), toTile(getY()));
-				etat = STAY;
+				onStop();
 			}
 		}
+	}
+
+	protected void onStop() {
+		MAP.removeBusy(oldPosition);
+		oldPosition.setLocation(toTile(getX()), toTile(getY()));
+		etat = STAY;
 	}
 
 	public void changeDirection(Direction _direction) {
@@ -113,7 +121,7 @@ public abstract class Perso extends Sprite implements Actionable {
 		}
 	}
 
-	public void move(Direction _direction) {
+	public boolean move(Direction _direction) {
 		changeDirection(_direction);
 		if (etat == STAY) {
 			int x = toTile(getX());
@@ -135,8 +143,11 @@ public abstract class Perso extends Sprite implements Actionable {
 			if (MAP.isFree(x, y)) {
 				MAP.setBusy(x, y, this);
 				etat = WALK;
+				return true;
 			}
+			return false;
 		}
+		return true;
 	}
 
 	@Override
@@ -166,6 +177,14 @@ public abstract class Perso extends Sprite implements Actionable {
 
 	public Direction getDirection() {
 		return direction;
+	}
+	
+	public void pause() {
+		play = false;
+	}
+	
+	public void play() {
+		play = true;
 	}
 
 }

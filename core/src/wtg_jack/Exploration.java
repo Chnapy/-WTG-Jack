@@ -8,20 +8,24 @@ package wtg_jack;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
+import java.awt.Point;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static wtg_jack.Main.FPS;
-import static wtg_jack.Main.TILE_SIZE;
-import static wtg_jack.Main.camera;
+import static wtg_jack.Jeu.FPS;
+import static wtg_jack.Jeu.TILE_SIZE;
+import static wtg_jack.Jeu.camera;
 import wtg_jack.map.Map;
 import wtg_jack.perso.Boby;
 import wtg_jack.perso.Jack;
 import wtg_jack.perso.Perso;
+import wtg_jack.transition.Fondu;
 
 /**
  * Exploration.java
@@ -31,12 +35,25 @@ public class Exploration implements Screen, InputProcessor {
 
 	private Batch batch;
 	private Batch dialogBatch;
+	private ShapeRenderer shapeRen;
 
 	public static final Map MAP = new Map();
-	public static final Dialogue DIALOGUE = new Dialogue();
+	private static Dialogue DIALOGUE = new Dialogue() {
+		@Override
+		public void end() {
+		}
+	};
+	private static Fondu FONDU = new Fondu(false) {
+		@Override
+		public void end() {
+		}
+		@Override
+		public void nextPos() {
+		}
+	};
 
-	private Jack jack;
-	private Array<Perso> persos;
+	public static final Jack jack = new Jack();
+	private static final Array<Perso> persos = new Array<>();
 
 	public Exploration() {
 
@@ -45,11 +62,12 @@ public class Exploration implements Screen, InputProcessor {
 		batch = MAP.getBatch();
 		dialogBatch = new SpriteBatch();
 		dialogBatch.setProjectionMatrix(camera.combined);
+		shapeRen = new ShapeRenderer();
+		shapeRen.setProjectionMatrix(camera.combined);
+		shapeRen.setColor(Color.BLACK);
 
-		jack = new Jack();
 		jack.setPosition(TILE_SIZE, TILE_SIZE);
 
-		persos = new Array<>();
 		persos.addAll(
 				jack,
 				new Boby()
@@ -74,6 +92,10 @@ public class Exploration implements Screen, InputProcessor {
 		//update
 		for (Perso perso : persos) {
 			perso.update();
+		}
+		
+		if(FONDU.isShow()) {
+			FONDU.next();
 		}
 
 		camera.position.set(jack.getX(), jack.getY(), 0);
@@ -100,13 +122,52 @@ public class Exploration implements Screen, InputProcessor {
 			perso.draw(batch);
 		}
 		batch.end();
-		dialogBatch.begin();
-		DIALOGUE.draw(dialogBatch);
-		dialogBatch.end();
+
+		if (DIALOGUE.isShow()) {
+			dialogBatch.begin();
+			DIALOGUE.draw(dialogBatch);
+			dialogBatch.end();
+		}
+
+		if (FONDU.isShow()) {
+			shapeRen.begin(ShapeRenderer.ShapeType.Filled);
+			for(Point p : FONDU.getPos()) {
+				shapeRen.rect(p.x * TILE_SIZE, p.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			}
+			shapeRen.end();
+		}
+	}
+
+	public static int toTile(float a) {
+		return (int) a / TILE_SIZE;
+	}
+
+	public static void pauseAll() {
+		for (int i = 0; i < persos.size; i++) {
+			persos.get(i).pause();
+		}
+	}
+
+	public static void playAll() {
+		for (int i = 0; i < persos.size; i++) {
+			persos.get(i).play();
+		}
+	}
+
+	public static void setDialogue(Dialogue dial) {
+		DIALOGUE = dial;
+	}
+
+	public static Dialogue getDialogue() {
+		return DIALOGUE;
 	}
 	
-	public static int toTile(float a) {
-		return (int) a/ TILE_SIZE;
+	public static void setFondu(Fondu fon) {
+		FONDU = fon;
+	}
+	
+	public static Fondu getFondu() {
+		return FONDU;
 	}
 
 	@Override

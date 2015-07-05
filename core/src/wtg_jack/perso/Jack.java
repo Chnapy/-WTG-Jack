@@ -10,11 +10,9 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import wtg_jack.Actionable;
-import static wtg_jack.Exploration.DIALOGUE;
 import static wtg_jack.Exploration.MAP;
+import static wtg_jack.Exploration.getDialogue;
 import static wtg_jack.Exploration.toTile;
-import static wtg_jack.Main.TILE_SIZE;
-import wtg_jack.perso.Enum;
 import static wtg_jack.perso.Enum.Direction.BOTTOM;
 import static wtg_jack.perso.Enum.Direction.LEFT;
 import static wtg_jack.perso.Enum.Direction.RIGHT;
@@ -61,6 +59,14 @@ public class Jack extends Perso {
 		if (etat != STAY) {
 			return;
 		}
+		if (getDialogue().isShow() || !play) {
+			switch (key) {
+				case Keys.A:
+					a();
+					break;
+			}
+			return;
+		}
 		switch (key) {
 			case Keys.A:
 				a();
@@ -90,8 +96,8 @@ public class Jack extends Perso {
 	}
 
 	public void a() {
-		if (DIALOGUE.isShow()) {
-			DIALOGUE.next();
+		if (getDialogue().isShow()) {
+			getDialogue().next();
 		} else {
 			int x = toTile(getX());
 			int y = toTile(getY());
@@ -122,27 +128,19 @@ public class Jack extends Perso {
 	}
 
 	public void left() {
-		if (!DIALOGUE.isShow()) {
-			move(LEFT);
-		}
+		move(LEFT);
 	}
 
 	public void right() {
-		if (!DIALOGUE.isShow()) {
-			move(RIGHT);
-		}
+		move(RIGHT);
 	}
 
 	public void up() {
-		if (!DIALOGUE.isShow()) {
-			move(TOP);
-		}
+		move(TOP);
 	}
 
 	public void down() {
-		if (!DIALOGUE.isShow()) {
-			move(BOTTOM);
-		}
+		move(BOTTOM);
 	}
 
 	public void start() {
@@ -154,30 +152,10 @@ public class Jack extends Perso {
 	}
 
 	@Override
-	public void update() {
-		if (etat != STAY) {
-			switch (direction) {
-				case LEFT:
-					setX(getX() - 1);
-					break;
-				case RIGHT:
-					setX(getX() + 1);
-					break;
-				case TOP:
-					setY(getY() + 1);
-					break;
-				case BOTTOM:
-					setY(getY() - 1);
-					break;
-			}
-			if (getX() % TILE_SIZE == 0 && getY() % TILE_SIZE == 0) {
-				MAP.removeBusy(oldPosition);
-				oldPosition.setLocation(toTile(getX()), toTile(getY()));
-				etat = STAY;
-				if (isMoveKeysPressed()) {
-					action();
-				}
-			}
+	protected void onStop() {
+		super.onStop();
+		if (play && !getDialogue().isShow() && isMoveKeysPressed()) {
+			action();
 		}
 	}
 
